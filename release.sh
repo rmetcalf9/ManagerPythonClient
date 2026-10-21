@@ -17,7 +17,7 @@ VERSION=$(uv version --short)
 uv lock
 
 sed -i "s/^__version__ = .*/__version__ = \"${VERSION}\"/" \
-  src/MangerPythonClient/__init__.py
+  src/ManagerPythonClient/__init__.py
 
 uv build
 
