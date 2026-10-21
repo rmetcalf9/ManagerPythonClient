@@ -32,7 +32,7 @@ Homepage = "https://github.com/rmetcalf9/ManagerPythonClient"
 Repository = "https://github.com/rmetcalf9/ManagerPythonClient"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/manager_python_client"]
+packages = ["src/ManagerPythonClient"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
