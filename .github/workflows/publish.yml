@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/manager-python-client
+      url: https://pypi.org/p/ManagerPythonClient
 
     steps:
       - name: Check out repository
