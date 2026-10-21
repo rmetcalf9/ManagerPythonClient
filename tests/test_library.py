@@ -1,6 +1,7 @@
-from ManagerPythonClient import (
-    hello_world
-)
+# from manager_python_client import (
+#     hello_world
+# )
+import manager_python_client
 
 def test_hello_world():
-    assert hello_world() == "Hello, world!"
+    assert manager_python_client.hello_world() == "Hello, world!"
