@@ -190,6 +190,33 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
             if issue_date >= start_date:
                 yield invoice
 
+    def get_sales_invoice_lines(self, loginSession):
+        def enrichParams(params):
+            params["sortBy"] = "IssueDate"
+        return self._get_generator(loginSession, "sales-invoice-lines", "salesInvoiceLines", enrichParams=enrichParams)
+    def get_sales_invoicelines_for_period(self, loginSession, start_day, end_day):
+        # Start day and end day format to be passed to this function: "01-JAN-2024"
+        # issuedate format in returned string 'issueDate': '2026-01-31'
+        def check_date_format(x):
+            if not isinstance(x, str):
+                raise ValueError("Invalid date format")
+            if len(x) != 11:
+                raise ValueError("Invalid date format")
+        check_date_format(start_day)
+        check_date_format(end_day)
+        start_date = datetime.datetime.strptime(start_day, "%d-%b-%Y").date()
+        end_date = datetime.datetime.strptime(end_day, "%d-%b-%Y").date()
+        if start_date > end_date:
+            raise ValueError("start_day must be before or equal to end_day")
+        for invoice in self.get_sales_invoice_lines(loginSession):
+            issue_date = datetime.datetime.strptime(
+                invoice["issueDate"], "%Y-%m-%d"
+            ).date()
+            if issue_date > end_date:
+                break
+            if issue_date >= start_date:
+                yield invoice
+
     def get_inter_account_transfer_for_description(self, loginSession, description):
         def enrichParams(params):
             params["term"] = description
