@@ -194,7 +194,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         def enrichParams(params):
             params["sortBy"] = "IssueDate"
         return self._get_generator(loginSession, "sales-invoice-lines", "salesInvoiceLines", enrichParams=enrichParams)
-    def get_sales_invoicelines_for_period(self, loginSession, start_day, end_day):
+    def get_sales_invoice_lines_for_period(self, loginSession, start_day, end_day):
         # Start day and end day format to be passed to this function: "01-JAN-2024"
         # issuedate format in returned string 'issueDate': '2026-01-31'
         def check_date_format(x):
