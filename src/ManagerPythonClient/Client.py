@@ -10,6 +10,7 @@ import os
 import requests
 import copy
 from decimal import Decimal
+import datetime
 
 from .SalesInvoiceGenerator import SalesInvoiceGenerator
 from .PurchaseInvoiceGenerator import PurchaseInvoiceGenerator
@@ -165,6 +166,29 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 return False
             return True
         return self._get_single(loginSession, description, "sales-invoices", "salesInvoices", matchFn=nameMatchFunction)
+
+    def get_sales_invoices_for_period(self, loginSession, start_day, end_day):
+        # Start day and end day format to be passed to this function: "01-JAN-2024"
+        # issuedate format in returned string 'issueDate': '2026-01-31'
+        def check_date_format(x)
+            if not isinstance(x, str):
+                raise ValueError("Invalid date format")
+            if len(x) != 11:
+                raise ValueError("Invalid date format")
+        check_date_format(start_day)
+        check_date_format(end_day)
+        start_date = datetime.strptime(start_day, "%d-%b-%Y").date()
+        end_date = datetime.strptime(end_day, "%d-%b-%Y").date()
+        if start_date > end_date:
+            raise ValueError("start_day must be before or equal to end_day")
+        for invoice in self.get_sales_invoices(loginSession):
+            issue_date = datetime.strptime(
+                invoice["issueDate"], "%Y-%m-%d"
+            ).date()
+            if issue_date > end_date:
+                break
+            if issue_date >= start_date:
+                yield invoice
 
     def get_inter_account_transfer_for_description(self, loginSession, description):
         def enrichParams(params):
