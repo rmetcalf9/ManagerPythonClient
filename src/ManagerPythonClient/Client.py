@@ -106,7 +106,8 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         if outputKey is None:
             outputKey = apiObj
         params = copy.deepcopy(extra_params)
-        params["term"] = "name"
+        if name is not None:
+            params["term"] = name
         response = self.sendGetRequest(
             url=f"/{apiObj}",
             loginSession=loginSession,
@@ -216,6 +217,9 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 break
             if issue_date >= start_date:
                 yield invoice
+
+    def get_sales_invoice_form(self, loginSession, sales_invoice_key):
+        return self._get_single(loginSession, None, f"sales-invoice-form/{sales_invoice_key}", "salesInvoiceForm")
 
     def get_inter_account_transfer_for_description(self, loginSession, description):
         def enrichParams(params):
