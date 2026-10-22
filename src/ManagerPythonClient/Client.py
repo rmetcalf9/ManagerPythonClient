@@ -116,6 +116,13 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         if response.status_code != 200:
             raise Exception("Error getting " + apiObj)
         data = json.loads(response.text)
+        if outputKey is None:
+            # we do not know the output key, just output it all
+            if matchFn is not None:
+                raise Exception("No output key given - not possible to use a match function")
+            return data
+        if outputKey not in data:
+            raise Exception(f"OutputKey: {outputKey} not found in response - given keys: {data.keys()}")
         if len(data[outputKey]) == 0:
             return None
         retItems = []
@@ -219,7 +226,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 yield invoice
 
     def get_sales_invoice_form(self, loginSession, sales_invoice_key):
-        return self._get_single(loginSession, None, f"sales-invoice-form/{sales_invoice_key}", "salesInvoiceForm")
+        return self._get_single(loginSession, None, f"sales-invoice-form/{sales_invoice_key}", None)
 
     def get_inter_account_transfer_for_description(self, loginSession, description):
         def enrichParams(params):
