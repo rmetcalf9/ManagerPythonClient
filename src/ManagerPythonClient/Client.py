@@ -101,12 +101,15 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 break
             skip += pageSize
 
-    def _get_single(self, loginSession, name, apiObj, outputKey=None, matchFn=nameMatchFunction):
+    def _get_single(self, loginSession, name, apiObj, outputKey=None, matchFn=nameMatchFunction, extra_params={}):
         if outputKey is None:
             outputKey = apiObj
+        params = copy.deepcopy(extra_params)
+        params["term"] = "name"
         response = self.sendGetRequest(
-            url=f"/{apiObj}?term={quote(name)}",
-            loginSession=loginSession
+            url=f"/{apiObj}",
+            loginSession=loginSession,
+            params=params
         )
         if response.status_code != 200:
             raise Exception("Error getting " + apiObj)
@@ -159,7 +162,11 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
             if item["description"] != description:
                 return False
             return True
-        return self._get_single(loginSession, description, "sales-invoices", "salesInvoices", matchFn=nameMatchFunction)
+
+        extra_params = {
+            "sortBy": "IssueDate"
+        }
+        return self._get_single(loginSession, description, "sales-invoices", "salesInvoices", matchFn=nameMatchFunction, extra_params=extra_params)
 
     def get_inter_account_transfer_for_description(self, loginSession, description):
         def enrichParams(params):
