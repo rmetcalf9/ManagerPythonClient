@@ -154,7 +154,9 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
             if customerName != sales_invoice["customer"]:
                 return True
             return False
-        return self._get_generator(loginSession, "sales-invoices", "salesInvoices", skipFn=skipFn)
+        def enrichParams(params):
+            params["sortBy"] = "IssueDate"
+        return self._get_generator(loginSession, "sales-invoices", "salesInvoices", skipFn=skipFn, enrichParams=enrichParams)
     def get_sales_invoice(self, loginSession, description, customerName):
         def nameMatchFunction(item, name):
             if item["customer"] != customerName:
@@ -162,11 +164,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
             if item["description"] != description:
                 return False
             return True
-
-        extra_params = {
-            "sortBy": "IssueDate"
-        }
-        return self._get_single(loginSession, description, "sales-invoices", "salesInvoices", matchFn=nameMatchFunction, extra_params=extra_params)
+        return self._get_single(loginSession, description, "sales-invoices", "salesInvoices", matchFn=nameMatchFunction)
 
     def get_inter_account_transfer_for_description(self, loginSession, description):
         def enrichParams(params):
