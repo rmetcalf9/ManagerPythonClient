@@ -226,7 +226,12 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 yield invoice
 
     def get_sales_invoice_form(self, loginSession, sales_invoice_key):
-        return self._get_single(loginSession, None, f"sales-invoice-form/{sales_invoice_key}", None)
+        return self._get_single(
+            loginSession=loginSession,
+            name=None,
+            apiObj=f"sales-invoice-form/{sales_invoice_key}",
+            outputKey=None
+        )
 
     def get_inter_account_transfer_for_description(self, loginSession, description):
         def enrichParams(params):
