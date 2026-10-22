@@ -102,6 +102,19 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 break
             skip += pageSize
 
+    def _get_obj_with_key(self, loginSession, apiPath, extra_params={}):
+        # used when apiPath = /sales-invoice-form/{key}
+        params = copy.deepcopy(extra_params)
+        response = self.sendGetRequest(
+            url=f"/{apiPath}",
+            loginSession=loginSession,
+            params=params
+        )
+        if response.status_code != 200:
+            raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
+        data = json.loads(response.text)
+        return data
+
     def _get_single(self, loginSession, name, apiObj, outputKey=None, matchFn=nameMatchFunction, extra_params={}):
         if outputKey is None:
             outputKey = apiObj
@@ -116,11 +129,6 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         if response.status_code != 200:
             raise Exception("Error getting " + apiObj)
         data = json.loads(response.text)
-        if outputKey is None:
-            # we do not know the output key, just output it all
-            if matchFn is not None:
-                raise Exception("No output key given - not possible to use a match function")
-            return data
         if outputKey not in data:
             raise Exception(f"OutputKey: {outputKey} not found in response - given keys: {data.keys()}")
         if len(data[outputKey]) == 0:
@@ -226,11 +234,9 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 yield invoice
 
     def get_sales_invoice_form(self, loginSession, sales_invoice_key):
-        return self._get_single(
+        return self._get_obj_with_key(
             loginSession=loginSession,
-            name=None,
-            apiObj=f"sales-invoice-form/{sales_invoice_key}",
-            outputKey=None
+            apiPath=f"sales-invoice-form/{sales_invoice_key}",
         )
 
     def get_inter_account_transfer_for_description(self, loginSession, description):
