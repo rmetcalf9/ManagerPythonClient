@@ -170,7 +170,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
     def get_sales_invoices_for_period(self, loginSession, start_day, end_day):
         # Start day and end day format to be passed to this function: "01-JAN-2024"
         # issuedate format in returned string 'issueDate': '2026-01-31'
-        def check_date_format(x)
+        def check_date_format(x):
             if not isinstance(x, str):
                 raise ValueError("Invalid date format")
             if len(x) != 11:
