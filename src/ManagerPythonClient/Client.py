@@ -177,12 +177,12 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 raise ValueError("Invalid date format")
         check_date_format(start_day)
         check_date_format(end_day)
-        start_date = datetime.strptime(start_day, "%d-%b-%Y").date()
-        end_date = datetime.strptime(end_day, "%d-%b-%Y").date()
+        start_date = datetime.datetime.strptime(start_day, "%d-%b-%Y").date()
+        end_date = datetime.datetime.strptime(end_day, "%d-%b-%Y").date()
         if start_date > end_date:
             raise ValueError("start_day must be before or equal to end_day")
         for invoice in self.get_sales_invoices(loginSession):
-            issue_date = datetime.strptime(
+            issue_date = datetime.datetime.strptime(
                 invoice["issueDate"], "%Y-%m-%d"
             ).date()
             if issue_date > end_date:
