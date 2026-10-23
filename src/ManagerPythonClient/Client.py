@@ -286,7 +286,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         end_date = datetime.datetime.strptime(end_day, "%d-%b-%Y").date()
         if start_date > end_date:
             raise ValueError("start_day must be before or equal to end_day")
-        for invoice in self.get_pirchase_invoices(loginSession):
+        for invoice in self.get_purchase_invoices(loginSession):
             issue_date = datetime.datetime.strptime(
                 invoice["issueDate"], "%Y-%m-%d"
             ).date()
