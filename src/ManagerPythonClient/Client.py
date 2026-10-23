@@ -255,7 +255,9 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
 
 
     def get_purchase_invoices(self, loginSession):
-        return self._get_generator(loginSession, "purchase-invoices", "purchaseInvoices")
+        def enrichParams(params):
+            params["sortBy"] = "IssueDate"
+        return self._get_generator(loginSession, "purchase-invoices", "purchaseInvoices", enrichParams=enrichParams)
     def get_purchase_invoices_for_supplier(self, loginSession, supplierName):
         def skipFn(purchase_invoice):
             if supplierName != purchase_invoice["supplier"]:
@@ -270,6 +272,60 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 return False
             return True
         return self._get_single(loginSession, description, "purchase-invoices", "purchaseInvoices", matchFn=nameMatchFunction)
+    def get_purchase_invoices_for_period(self, loginSession, start_day, end_day):
+        # Start day and end day format to be passed to this function: "01-JAN-2024"
+        # issuedate format in returned string 'issueDate': '2026-01-31'
+        def check_date_format(x):
+            if not isinstance(x, str):
+                raise ValueError("Invalid date format")
+            if len(x) != 11:
+                raise ValueError("Invalid date format")
+        check_date_format(start_day)
+        check_date_format(end_day)
+        start_date = datetime.datetime.strptime(start_day, "%d-%b-%Y").date()
+        end_date = datetime.datetime.strptime(end_day, "%d-%b-%Y").date()
+        if start_date > end_date:
+            raise ValueError("start_day must be before or equal to end_day")
+        for invoice in self.get_pirchase_invoices(loginSession):
+            issue_date = datetime.datetime.strptime(
+                invoice["issueDate"], "%Y-%m-%d"
+            ).date()
+            if issue_date > end_date:
+                break
+            if issue_date >= start_date:
+                yield invoice
+    def get_purchase_invoice_lines(self, loginSession):
+        def enrichParams(params):
+            params["sortBy"] = "IssueDate"
+        return self._get_generator(loginSession, "purchase-invoice-lines", "purchaseInvoiceLines", enrichParams=enrichParams)
+    def get_purchase_invoice_lines_for_period(self, loginSession, start_day, end_day):
+        # Start day and end day format to be passed to this function: "01-JAN-2024"
+        # issuedate format in returned string 'issueDate': '2026-01-31'
+        def check_date_format(x):
+            if not isinstance(x, str):
+                raise ValueError("Invalid date format")
+            if len(x) != 11:
+                raise ValueError("Invalid date format")
+        check_date_format(start_day)
+        check_date_format(end_day)
+        start_date = datetime.datetime.strptime(start_day, "%d-%b-%Y").date()
+        end_date = datetime.datetime.strptime(end_day, "%d-%b-%Y").date()
+        if start_date > end_date:
+            raise ValueError("start_day must be before or equal to end_day")
+        for invoice in self.get_purchase_invoice_lines(loginSession):
+            issue_date = datetime.datetime.strptime(
+                invoice["issueDate"], "%Y-%m-%d"
+            ).date()
+            if issue_date > end_date:
+                break
+            if issue_date >= start_date:
+                yield invoice
+
+    def get_purchase_invoice_form(self, loginSession, purchase_invoice_key):
+        return self._get_obj_with_key(
+            loginSession=loginSession,
+            apiPath=f"purchase-invoice-form/{purchase_invoice_key}",
+        )
 
     def get_payment_for_description(self, loginSession, description):
         def enrichParams(params):
