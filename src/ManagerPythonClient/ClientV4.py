@@ -5,7 +5,7 @@ import json
 #  it is designed to work always with the same business
 #  only for local so no login
 
-class ManagerClient(PythonAPIClientBase.APIClientBase):
+class ManagerClientV4(PythonAPIClientBase.APIClientBase):
     def __init__(self, baseUrl, business_name, mock=None, forceOneRequestAtATime=False, verboseLogging=PythonAPIClientBase.VerboseLoggingNullLogClass(), debug=False):
         self.debug = debug
         self.business_name = business_name
