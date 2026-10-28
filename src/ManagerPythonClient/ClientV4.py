@@ -48,3 +48,37 @@ class ManagerClientV4(PythonAPIClientBase.APIClientBase):
             raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
         data = json.loads(response.text)
         return data
+
+    def get_balance_sheet_batch(self):
+        apiPath = "/balance-sheet-batch"
+        response = self.sendGetRequest(
+            url=apiPath,
+            loginSession=None
+        )
+        if response.status_code != 200:
+            raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
+        data = json.loads(response.text)
+        return data
+
+    def get_balance_sheet_batch(self):
+        apiPath = "/balance-sheet-batch"
+        response = self.sendGetRequest(
+            url=apiPath,
+            loginSession=None
+        )
+        if response.status_code != 200:
+            raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
+        data = json.loads(response.text)
+        return data
+
+    def get_trial_balance_batch(self):
+        apiPath = "/get-trial-balance-batch"
+        response = self.sendGetRequest(
+            url=apiPath,
+            loginSession=None
+        )
+        if response.status_code != 200:
+            raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
+        data = json.loads(response.text)
+        return data
+
