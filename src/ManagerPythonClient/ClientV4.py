@@ -87,8 +87,8 @@ class ManagerClientV4(PythonAPIClientBase.APIClientBase):
         data = json.loads(response.text)
         return data
 
-    def get_trail_balance_view(self, key):
-        apiPath = "/trail-balance-view"
+    def get_trial_balance_view(self, key):
+        apiPath = "/trial-balance-view"
         params = {
             "key": key
         }
