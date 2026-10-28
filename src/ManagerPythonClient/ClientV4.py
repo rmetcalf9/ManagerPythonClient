@@ -34,5 +34,17 @@ class ManagerClientV4(PythonAPIClientBase.APIClientBase):
         data = json.loads(response.text)
         return data
 
-
-#http://localhost:55667/api4/profit-and-loss-statement-batch?business=Evernet%20Properties
+    def get_profit_and_loss_statement_view(self, key):
+        apiPath = "/profit-and-loss-statement-view"
+        params = {
+            "key": key
+        }
+        response = self.sendGetRequest(
+            url=apiPath,
+            loginSession=None,
+            params=params
+        )
+        if response.status_code != 200:
+            raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
+        data = json.loads(response.text)
+        return data
