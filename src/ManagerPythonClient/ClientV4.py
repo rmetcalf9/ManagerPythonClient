@@ -21,7 +21,7 @@ class ManagerClientV4(PythonAPIClientBase.APIClientBase):
         if params is not None:
             business_params = copy.deepcopy(params)
         business_params["business"] = self.business_name
-        super().sendRequest(reqFn, url, loginSession, data, origin, injectHeadersFn, postRefreshCall, skipLockCheck, params=business_params)
+        return super().sendRequest(reqFn, url, loginSession, data, origin, injectHeadersFn, postRefreshCall, skipLockCheck, params=business_params)
 
     def get_profit_and_loss_statement_batch(self):
         apiPath = "/profit-and-loss-statement-batch"
