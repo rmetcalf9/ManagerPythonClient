@@ -48,6 +48,8 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         self.debug = debug
         useBaseUrl = baseUrl
         if useBaseUrl != "MOCK":
+            if not baseUrl.endswith("/api2"):
+                raise Exception(f"Baseurl does not have a /api2 endpoint {baseUrl} (Do you need ClientV4?")
             useBaseUrl = useBaseUrl
         super().__init__(baseURL=useBaseUrl, mock=mock, forceOneRequestAtATime=forceOneRequestAtATime, verboseLogging=verboseLogging)
 
