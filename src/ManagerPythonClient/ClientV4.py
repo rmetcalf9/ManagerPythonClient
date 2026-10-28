@@ -49,6 +49,7 @@ class ManagerClientV4(PythonAPIClientBase.APIClientBase):
         data = json.loads(response.text)
         return data
 
+
     def get_balance_sheet_batch(self):
         apiPath = "/balance-sheet-batch"
         response = self.sendGetRequest(
@@ -60,11 +61,15 @@ class ManagerClientV4(PythonAPIClientBase.APIClientBase):
         data = json.loads(response.text)
         return data
 
-    def get_balance_sheet_batch(self):
-        apiPath = "/balance-sheet-batch"
+    def get_balance_sheet_view(self, key):
+        apiPath = "/balance-sheet-view"
+        params = {
+            "key": key
+        }
         response = self.sendGetRequest(
             url=apiPath,
-            loginSession=None
+            loginSession=None,
+            params=params
         )
         if response.status_code != 200:
             raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
@@ -72,7 +77,7 @@ class ManagerClientV4(PythonAPIClientBase.APIClientBase):
         return data
 
     def get_trial_balance_batch(self):
-        apiPath = "/get-trial-balance-batch"
+        apiPath = "/trial-balance-batch"
         response = self.sendGetRequest(
             url=apiPath,
             loginSession=None
@@ -82,3 +87,17 @@ class ManagerClientV4(PythonAPIClientBase.APIClientBase):
         data = json.loads(response.text)
         return data
 
+    def get_trail_balance_view(self, key):
+        apiPath = "/trail-balance-view"
+        params = {
+            "key": key
+        }
+        response = self.sendGetRequest(
+            url=apiPath,
+            loginSession=None,
+            params=params
+        )
+        if response.status_code != 200:
+            raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
+        data = json.loads(response.text)
+        return data
