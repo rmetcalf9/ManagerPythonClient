@@ -88,7 +88,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
             if response.status_code != 200:
                 print("status_code=", response.status_code)
                 raise Exception("Error getting " + apiObj)
-            data = json.loads(response.text)
+            data = json.loads(response.text, parse_float=Decimal)
             # print("D", data)
             if outputKey not in data:
                 print("Possible keys", data.keys())
@@ -114,7 +114,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         )
         if response.status_code != 200:
             raise Exception(f"Error getting {apiPath} ({response.status_code} - {response.text})")
-        data = json.loads(response.text)
+        data = json.loads(response.text, parse_float=Decimal)
         return data
 
     def _get_single(self, loginSession, name, apiObj, outputKey=None, matchFn=nameMatchFunction, extra_params={}):
@@ -130,7 +130,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         )
         if response.status_code != 200:
             raise Exception("Error getting " + apiObj)
-        data = json.loads(response.text)
+        data = json.loads(response.text, parse_float=Decimal)
         if outputKey not in data:
             raise Exception(f"OutputKey: {outputKey} not found in response - given keys: {data.keys()}")
         if len(data[outputKey]) == 0:
@@ -381,7 +381,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         )
         if response.status_code != 201:
             raise Exception("Error creating sales invoice")
-        data = json.loads(response.text)
+        data = json.loads(response.text, parse_float=Decimal)
         return data
 
     def pay_sales_invoice(self, loginSession, date, recievedAccountKey, description, accountKey, accountRecivablesCustomer, salesInvoiceKey, amount):
@@ -407,7 +407,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         )
         if response.status_code != 201:
             raise Exception("Error creating sales invoice payment")
-        data = json.loads(response.text)
+        data = json.loads(response.text, parse_float=Decimal)
         return data
 
     def get_receipt_for_description(self, loginSession, description):
@@ -461,7 +461,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         )
         if response.status_code != 201:
             raise Exception("Error creating sales invoice")
-        data = json.loads(response.text)
+        data = json.loads(response.text, parse_float=Decimal)
         return data
 
     def pay_purchase_invoice(self, loginSession, date, paidFromAccountKey, description, accountKey, accountPayableSupplier, purchaseInvoiceKey, amount):
@@ -487,7 +487,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
         )
         if response.status_code != 201:
             raise Exception("Error creating purchase invoice payment")
-        data = json.loads(response.text)
+        data = json.loads(response.text, parse_float=Decimal)
         return data
 
     def create_inter_account_transfer(
@@ -522,7 +522,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 f"{response.status_code} {response.text}"
             )
 
-        return json.loads(response.text)
+        return json.loads(response.text, parse_float=Decimal)
 
     def get_business(self, loginSession):
         response = self.sendGetRequest(
@@ -534,7 +534,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 f"Error getting business name: "
                 f"{response.status_code} {response.text}"
             )
-        data = json.loads(response.text)
+        data = json.loads(response.text, parse_float=Decimal)
         return data["business"]
 
     def attach_to_purchase_invoice(
@@ -577,7 +577,7 @@ class ManagerClient(PythonAPIClientBase.APIClientBase):
                 f"Error uploading attachment: "
                 f"{response.status_code} {response.text}"
             )
-        data = json.loads(response.text)
+        data = json.loads(response.text, parse_float=Decimal)
         return data
 
     def get_transaction_reporter(self, loginSession):

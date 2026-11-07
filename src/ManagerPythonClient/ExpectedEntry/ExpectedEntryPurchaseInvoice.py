@@ -1,5 +1,5 @@
 from .ExpectedEntryBase import ExpectedEntryBase
-
+from decimal import Decimal
 
 class ExpectedEntryPurchaseInvoice(ExpectedEntryBase):
     def __init__(self, companyObj, date, description, supplier, reference, account, lineDescription, qty, unitPrice, requiredAttachements=0, attachements=[]):
@@ -73,7 +73,7 @@ class ExpectedEntryPurchaseInvoice(ExpectedEntryBase):
         return self.supplier["name"]
 
     def get_total_amount(self):
-        return self.qty * self.unitPrice
+        return Decimal(self.qty) * Decimal(self.unitPrice)
 
     def _is_correctable(self):
         if len(self.attachements) != self.requiredAttachements:
