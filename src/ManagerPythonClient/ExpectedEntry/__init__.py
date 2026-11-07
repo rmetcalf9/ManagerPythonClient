@@ -1,4 +1,5 @@
 from .Pattern import Pattern
+from .ExpectedEntryBase import ExpectedEntryBase
 from .ExpectedEntrySalesInvoice import ExpectedEntrySalesInvoice
 from .ExpectedEntryInterAccountTransfer import ExpectedEntryInterAccountTransfer
 from .ExpectedEntryPurchaseInvoice import ExpectedEntryPurchaseInvoice
