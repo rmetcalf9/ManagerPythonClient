@@ -1,5 +1,6 @@
 from .ExpectedEntryBase import ExpectedEntryBase
 from .ExpectedEntrySalesInvoice import ExpectedEntrySalesInvoice
+from .ExpectedEntryMultilineSalesInvoice import ExpectedEntryMultilineSalesInvoice
 
 class ExpectedEntrySalesInvoiceReceipt(ExpectedEntryBase):
     def __init__(self, companyObj, date, description, receivedAccount, accountRecivablesCustomer, account, amount, salesInvoice):
@@ -14,7 +15,8 @@ class ExpectedEntrySalesInvoiceReceipt(ExpectedEntryBase):
         self.account = account # e.g. accounts payable
         self.salesInvoice = salesInvoice
         if not isinstance(salesInvoice, ExpectedEntrySalesInvoice):
-            raise Exception("Must have a sales invoice to relate to")
+            if not isinstance(salesInvoice, ExpectedEntryMultilineSalesInvoice):
+                raise Exception("Must have a sales invoice to relate to")
         if self.companyObj["name"] != self.salesInvoice.companyObj["name"]:
             raise Exception("Sales Invoice does not belong to the same company")
         if self.amount != self.salesInvoice.get_total_amount():
